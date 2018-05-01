@@ -1,4 +1,66 @@
 var Booking = require('../models/booking.model.js');
+var nodemailer = require('nodemailer');
+
+function mailBookingCreate(til, navn, firma, phone, antall, dato, starttid, slutttid, room )
+{
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 's236372mail@gmail.com',
+        pass: 'IQbal9191'
+    }
+});
+
+var mailOptions = {
+    from: 's236372mail@gmail.com',
+    to:  til,
+    subject: 'IBM Client Center Booking ',
+    text:  'You will get a confirmation mail when the booking is confirmed' + '\n\n'  +  'Name: ' + navn + '\n' + 'Firm: ' + firma + '\n' + 'Email: '
+    + til  + '\n' + 'Phone: ' + phone  + '\n' + 'Number of people: ' +
+    antall  + '\n' + 'Date: ' + dato  + '\n' + 'Start time: ' + starttid + '\n' +
+    'End time: ' + slutttid + '\n' + 'Room: ' + room
+};
+
+transporter.sendMail(mailOptions, function(error, info)
+{
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('Email sent: ' + info.response);
+    }
+});
+}
+
+function mailBookingConfirm(til, navn, firma, phone, antall, dato, starttid, slutttid, room )
+{
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 's236372mail@gmail.com',
+            pass: 'IQbal9191'
+        }
+    });
+
+    var mailOptions = {
+        from: 's236372mail@gmail.com',
+        to:  til,
+        subject: 'IBM Client Center Booking ',
+        text:  'Your booking has been confirmed' + '\n\n'  +  'Name: ' + navn + '\n' + 'Firm: ' + firma + '\n' + 'Email: '
+        + til  + '\n' + 'Phone: ' + phone  + '\n' + 'Number of people: ' +
+        antall  + '\n' + 'Date: ' + dato  + '\n' + 'Start time: ' + starttid + '\n' +
+        'End time: ' + slutttid + '\n' + 'Room: ' + room
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
 
 exports.create = function(req, res) 
 {
@@ -8,21 +70,26 @@ exports.create = function(req, res)
         return res.status(400).send({melding: "Booking can not be empty"});
     }
 
-    var booking = new Booking({navn: req.body.navn,
+    var booking = new Booking({
+                               navn: req.body.navn,
                                firma: req.body.firma,
+                               email: req.body.email,
+                               phone: req.body.phone,
                                antall: req.body.antall,
                                dato: req.body.dato,
                                starttid: req.body.starttid,
                                slutttid: req.body.slutttid,
-                               scnr: req.body.scnr,
-                               lunsj: req.body.lunsj,
-                               omvisning: req.body.omvisning});
+                               opportunityNr: req.body.opportunityNr,
+                               room: req.body.room,
+                               approved: req.body.approved,
+    });
 
     booking.save(function(err, data) {
         if(err) {
             console.log(err);
             res.status(500).send({melding: "Error ny booking"});
         } else {
+            mailBookingCreate(booking.email, booking.navn,  booking.firma, booking.phone, booking.antall, booking.dato, booking.starttid, booking.slutttid, booking.room);
             res.send(data);
         }
     });
@@ -84,19 +151,25 @@ exports.update = function(req, res)
 
         booking.navn = req.body.navn;
         booking.firma = req.body.firma;
+        booking.email = req.body.email;
+        booking.phone = req.body.phone;
         booking.antall = req.body.antall;
         booking.dato = req.body.dato;
         booking.starttid = req.body.starttid;
         booking.slutttid = req.body.slutttid;
-        booking.scnr = req.body.scnr;
-        booking.lunsj = req.body.lunsj;
-        booking.omvisning = req.body.omvisning;
+        booking.opportunityNr = req.body.opportunityNr;
+        booking.room = req.body.room;
+        booking.approved = req.body.approved;
 
 
         booking.save(function(err, data){
             if(err) {
                 res.status(500).send({message: "Could not update booking with id " + req.params.bookingId});
             } else {
+                if(booking.approved == true)
+                {
+                    mailBookingConfirm(booking.email, booking.navn, booking.firma, booking.phone, booking.antall, booking.dato, booking.starttid, booking.slutttid, booking.room);
+                }
                 res.send(data);
             }
         });
@@ -123,7 +196,4 @@ exports.delete = function(req, res)
 
         res.send({message: "Booking deleted successfully!"})
     });
-
-
-
 };

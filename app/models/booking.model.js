@@ -3,13 +3,15 @@ var mongoose = require('mongoose');
 var BookingSkjema = mongoose.Schema({
     "navn": String,
     "firma": String,
+    "email": String,
+    "phone": Number,
     "antall": Number,
     "dato": String,
     "starttid": String,
     "slutttid": String,
-    "scnr": String,
-    "lunsj": Boolean,
-    "omvisning": Boolean,
+    "opportunityNr": String,
+    "room": String,
+    "approved": Boolean,
 }, {
     //timestamps: true
 });

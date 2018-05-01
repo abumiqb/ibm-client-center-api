@@ -1,5 +1,5 @@
 {
-  "name": "ibm-booking-api",
+  "name": "ibm-client-center-api",
   "version": "1.0.0",
   "scripts": {
     "server": "server.js"
@@ -7,9 +7,10 @@
   "keywords": [
     "Express",
     "RestAPI",
-    "Mongo"
+    "Mongo",
+    "Nodemailer"
   ],
-  "author": "Abu",
+  "author": "Abubakr Iqbal",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -18,7 +19,7 @@
     "moment": "^2.21.0",
     "mongoose": "^5.0.9",
     "multer": "^1.3.0",
-    "nodemon": "^1.17.3"
+    "nodemailer": "^4.6.4"
   },
   "devDependencies": {}
 }
