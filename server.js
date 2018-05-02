@@ -51,6 +51,7 @@ app.get('/', function(req, res){
 require('./app/routes/rom.routes.js') (app);
 require('./app/routes/booking.routes.js') (app);
 require('./app/routes/loginn.routes.js') (app);
+require('./app/routes/briefing.routes.js') (app);
 
 const port = process.env.PORT || 3001;
 app.listen(port, function () {

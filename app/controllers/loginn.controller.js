@@ -4,17 +4,18 @@ exports.authenticate = function(req, res)
 {
     // Authenticate admin login
     
-    Loginn.find({brukernavn: req.body.username, passord: req.body.password}, function(err, loginn) {
+    Loginn.find({brukernavn: req.body.username, passord: req.body.password}, function(err, loginn) 
+    {
         if(err) {
             //console.log(err);
             if(err.kind === 'ObjectId') {
-                return res.status(404).send({melding: "Loginn ikke funnet med id " + req.params.loginnId});
+                return res.status(403).send({melding: "Loginn ikke funnet med id " + req.params.loginnId});
             }
-            return res.status(500).send({melding: "Error retrieving loginn with id " + req.params.loginnId});
+            return res.status(403).send({melding: "Error retrieving loginn with id " + req.params.loginnId});
         }
 
         if(!loginn) {
-            return res.status(404).send({melding: "Loginn ikke funnet med id " + req.params.loginnId});
+            return res.status(403).send({melding: "Loginn ikke funnet med id " + req.params.loginnId});
         }
         
         if(loginn.length > 0)
