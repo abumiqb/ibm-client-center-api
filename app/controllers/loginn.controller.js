@@ -2,7 +2,7 @@ var Loginn = require('../models/loginn.model.js');
 
 exports.authenticate = function(req, res)
 {
-    // Authenticate admin login
+    // Authenticate admin login username
     
     Loginn.find({brukernavn: req.body.username, passord: req.body.password}, function(err, loginn) 
     {
